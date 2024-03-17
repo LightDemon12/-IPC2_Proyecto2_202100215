@@ -2,7 +2,7 @@
 <config>
     <maquetas>
         <maqueta>
-            <nombre> maqueta1 </nombre>
+            <nombre> z</nombre>
             <filas>9 </filas>
             <columnas> 11 </columnas>
             <entrada>
@@ -34,7 +34,7 @@
             <estructura> *-*-*****-*-----------*****--**-*----****--*-*--*----**-******--*--*-------********-*------*------- </estructura>
         </maqueta>
         <maqueta>
-            <nombre> 1234 </nombre>
+            <nombre> a </nombre>
             <filas> 4 </filas>
             <columnas> 4 </columnas>
             <entrada>

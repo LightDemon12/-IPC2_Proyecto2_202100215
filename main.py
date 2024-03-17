@@ -1,11 +1,11 @@
 # importar cosas necesarias
 import tkinter as tk
 from tkinter import filedialog
-from XML_reader import XMLReader
-from XML_reader import LinkedList
+from XML_reader import leer_xml
+from XML_reader import LinkedListMaquetas
 
 # Variable global para almacenar la información del archivo XML cargado
-informacion_xml = None
+maquetas = LinkedListMaquetas()
 
 def inicializacion():
     # Lógica de inicialización
@@ -17,14 +17,15 @@ def cargar_archivo_xml():
     ruta_archivo = filedialog.askopenfilename(filetypes=[("Archivos XML", "*.xml")])
 
     if ruta_archivo:
-        informacion_xml = XMLReader.leer_xml(ruta_archivo)
+        informacion_xml = leer_xml(ruta_archivo)
         print("Archivo XML cargado correctamente.")
 
-def listar_maquetas():
-    maquetas = LinkedList()  # Crear una instancia de LinkedList
+
+def listar_maquetas(maquetas):
     # Lógica para mostrar las maquetas
-    maquetas.mostrar_maquetas()
     print("Listado de maquetas:")
+    maquetas.mostrar_maquetas()
+
 
 
 def ver_configuracion_maqueta():
@@ -50,6 +51,8 @@ def main():
     print("Inicialización ----> Soluciones mecatrónicas innovadoras")
     input("Presione Enter para iniciar el programa.")
 
+    global maquetas
+
     while True:
         print("\nMenú Principal:")
         print("1. Cargar un archivo XML de entrada")
@@ -62,7 +65,7 @@ def main():
         if opcion == "1":
             cargar_archivo_xml()
         elif opcion == "2":
-            listar_maquetas()  # Llamar a la función listar_maquetas
+            listar_maquetas(maquetas)  # Llamar a la función listar_maquetas
             while True:
                 print("\nSubmenú de Ver listado de maquetas:")
                 print("1. Ver configuración de maqueta")
