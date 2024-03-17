@@ -2,6 +2,7 @@
 import tkinter as tk
 from tkinter import filedialog
 from XML_reader import XMLReader
+from XML_reader import LinkedList
 
 # Variable global para almacenar la información del archivo XML cargado
 informacion_xml = None
@@ -20,8 +21,11 @@ def cargar_archivo_xml():
         print("Archivo XML cargado correctamente.")
 
 def listar_maquetas():
-    # Lógica para listar las maquetas ordenadas alfabéticamente
+    maquetas = LinkedList()  # Crear una instancia de LinkedList
+    # Lógica para mostrar las maquetas
+    maquetas.mostrar_maquetas()
     print("Listado de maquetas:")
+
 
 def ver_configuracion_maqueta():
     # Lógica para ver la configuración de una maqueta
@@ -58,6 +62,7 @@ def main():
         if opcion == "1":
             cargar_archivo_xml()
         elif opcion == "2":
+            listar_maquetas()  # Llamar a la función listar_maquetas
             while True:
                 print("\nSubmenú de Ver listado de maquetas:")
                 print("1. Ver configuración de maqueta")
