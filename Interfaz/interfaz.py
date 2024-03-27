@@ -10,10 +10,20 @@ def iniciar_interfaz(lista_maquetas):
     app.geometry("750x480")
     app.title("Gestión de Maquetas")
 
+    def actualizar_combobox():
+        # Obtener los nombres de las maquetas
+        nombres_maquetas = [maqueta.nombre for maqueta in lista_maquetas]
+
+        # Actualizar los valores del combobox
+        combo_maquetas['values'] = nombres_maquetas
+
     def boton_XML():
         ruta_archivo = seleccionar_archivo()
         cargar_maquetas_desde_xml(ruta_archivo, lista_maquetas)
         print("boton_XML presionado")
+
+        # Actualizar el combobox después de cargar las maquetas
+        actualizar_combobox()
 
     def boton_gestion_maquetas():
         print("boton_gestion_maquetas presionado")

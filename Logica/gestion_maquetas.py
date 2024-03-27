@@ -124,3 +124,8 @@ class ListaMaquetas:
                 print(estructura_actual.caracter)
                 estructura_actual = estructura_actual.siguiente
             actual = actual.siguiente
+    def __iter__(self):
+        nodo = self.cabeza
+        while nodo is not None:
+            yield nodo
+            nodo = nodo.siguiente
