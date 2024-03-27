@@ -12,7 +12,10 @@ def iniciar_interfaz(lista_maquetas):
 
     def actualizar_combobox():
         # Obtener los nombres de las maquetas
-        nombres_maquetas = [maqueta.nombre for maqueta in lista_maquetas]
+        nombres_maquetas = lista_maquetas.obtener_nombres()
+
+        # Dividir la cadena en una lista de nombres
+        nombres_maquetas = nombres_maquetas.split("\n")
 
         # Actualizar los valores del combobox
         combo_maquetas['values'] = nombres_maquetas
@@ -63,7 +66,7 @@ def iniciar_interfaz(lista_maquetas):
 
     # Crear Combobox para seleccionar maquetas
     combo_maquetas = ttk.Combobox(master=app)
-    combo_maquetas['values'] = ('Maqueta 1', 'Maqueta 2', 'Maqueta 3')  # Ejemplo de valores
+    combo_maquetas['values'] = ()  # Ejemplo de valores
     combo_maquetas.grid(row=3, column=1, columnspan=4, padx=20, pady=20)
 
     # Iniciar el bucle principal de la aplicación

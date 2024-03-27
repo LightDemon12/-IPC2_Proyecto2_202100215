@@ -129,3 +129,9 @@ class ListaMaquetas:
         while nodo is not None:
             yield nodo
             nodo = nodo.siguiente
+            
+    def obtener_nombres(self):
+        nombres = ""
+        for maqueta in self:
+            nombres += maqueta.nombre + "\n"
+        return nombres[:-1]  # Eliminar la última nueva línea

@@ -138,3 +138,4 @@ ventana2 = mostrar_imagen('laberinto_con_recorrido.png')
 
 # Llamar a mainloop una vez que todas las ventanas estén creadas
 ventana_principal.mainloop()
+
