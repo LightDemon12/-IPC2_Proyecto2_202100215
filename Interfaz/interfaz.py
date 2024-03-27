@@ -10,19 +10,12 @@ def iniciar_interfaz(lista_maquetas):
     app.geometry("750x480")
     app.title("Gestión de Maquetas")
 
-    # El resto de tu código...
-
-# Variable global para almacenar la lista de maquetas
-# Variable global para almacenar la lista de maquetas
-    lista_maquetas = None
-
     def boton_XML():
         ruta_archivo = seleccionar_archivo()
-        lista_maquetas = cargar_maquetas_desde_xml(ruta_archivo)
+        cargar_maquetas_desde_xml(ruta_archivo, lista_maquetas)
         print("boton_XML presionado")
 
     def boton_gestion_maquetas():
-        global lista_maquetas
         print("boton_gestion_maquetas presionado")
         if lista_maquetas is not None:
             lista_maquetas.imprimir_todos()

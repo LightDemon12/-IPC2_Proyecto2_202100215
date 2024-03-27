@@ -1,14 +1,11 @@
 import xml.etree.ElementTree as ET
-from gestion_maquetas import NodoMaqueta, ListaMaquetas
+from Logica.gestion_maquetas import NodoMaqueta, ListaMaquetas
 
-def cargar_maquetas_desde_xml(ruta_archivo, lista_maquetas=None):
+def cargar_maquetas_desde_xml(ruta_archivo, lista_maquetas):
     print(f"Cargando maquetas desde el archivo: {ruta_archivo}")
     try:
         tree = ET.parse(ruta_archivo)
         root = tree.getroot()
-
-        if lista_maquetas is None:
-            lista_maquetas = ListaMaquetas()
 
         for maqueta_xml in root.iter('maqueta'):
             maqueta = NodoMaqueta(
@@ -32,9 +29,7 @@ def cargar_maquetas_desde_xml(ruta_archivo, lista_maquetas=None):
 
             lista_maquetas.agregar_maqueta(maqueta)
 
-        lista_maquetas.imprimir_todos()  # Nueva línea de código
-
-        return lista_maquetas
+        lista_maquetas.imprimir_todos()
 
     except ET.ParseError:
         print("Error al parsear el archivo XML")
