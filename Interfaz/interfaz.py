@@ -1,20 +1,33 @@
 import tkinter as tk
 from tkinter import ttk
-from Logica.seleccion_archivo import SelectorArchivo
-from Logica.XML_reader import leer_xml
-def iniciar_interfaz():
+from Logica.seleccion_archivo import seleccionar_archivo
+from Logica.XML_reader import cargar_maquetas_desde_xml
+from Logica.gestion_maquetas import ListaMaquetas
+
+def iniciar_interfaz(lista_maquetas):
     # Configurar la apariencia de la ventana principal
     app = tk.Tk()
     app.geometry("750x480")
     app.title("Gestión de Maquetas")
 
+    # El resto de tu código...
+
+# Variable global para almacenar la lista de maquetas
+# Variable global para almacenar la lista de maquetas
+    lista_maquetas = None
+
     def boton_XML():
-        selector = SelectorArchivo()
-        selector.seleccionar_archivo(leer_xml)  # Asegúrate de que funcion_leer_xml esté definida
+        ruta_archivo = seleccionar_archivo()
+        lista_maquetas = cargar_maquetas_desde_xml(ruta_archivo)
         print("boton_XML presionado")
 
     def boton_gestion_maquetas():
+        global lista_maquetas
         print("boton_gestion_maquetas presionado")
+        if lista_maquetas is not None:
+            lista_maquetas.imprimir_todos()
+        else:
+            print("No hay maquetas cargadas")
 
     def boton_resolucion_maquetas():
         print("boton_resolucion_maquetas presionado")
