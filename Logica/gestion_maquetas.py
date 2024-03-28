@@ -46,6 +46,22 @@ class NodoMaqueta:
             actual.siguiente = nueva_estructura
             nueva_estructura.anterior = actual
 
+    def obtener_estructura(self):
+        estructura = ""
+        actual = self.estructura
+        while actual:
+            estructura += actual.caracter 
+            actual = actual.siguiente
+        return estructura[:-1]  # Eliminar la última nueva línea
+
+    def obtener_objetivos(self):
+        objetivos = ""
+        actual = self.objetivos
+        while actual:
+            objetivos += f"Nombre: {actual.nombre}, Fila: {actual.coordenada_fila}, Columna: {actual.coordenada_columna}\n"
+            actual = actual.siguiente
+        return objetivos[:-1]  # Eliminar la última nueva línea
+
 class ListaMaquetas:
     def __init__(self):
         self.cabeza = None
@@ -93,22 +109,6 @@ class ListaMaquetas:
             actual = actual.siguiente
         return None
 
-    def obtener_estructura(self, nombre):
-        maqueta = self.buscar_por_nombre(nombre)
-        if maqueta:
-            return maqueta.obtener_estructura()
-        else:
-            print(f"No se encontró ninguna maqueta con el nombre {nombre}")
-            return None
-
-    def obtener_objetivos(self, nombre):
-        maqueta = self.buscar_por_nombre(nombre)
-        if maqueta:
-            return maqueta.obtener_objetivos()
-        else:
-            print(f"No se encontró ninguna maqueta con el nombre {nombre}")
-            return None
-
     def imprimir_todos(self):
         actual = self.cabeza
         while actual:
@@ -124,6 +124,7 @@ class ListaMaquetas:
                 print(estructura_actual.caracter)
                 estructura_actual = estructura_actual.siguiente
             actual = actual.siguiente
+
     def __iter__(self):
         nodo = self.cabeza
         while nodo is not None:
@@ -135,3 +136,6 @@ class ListaMaquetas:
         for maqueta in self:
             nombres += maqueta.nombre + "\n"
         return nombres[:-1]  # Eliminar la última nueva línea
+    
+    def eliminar_todas(self):
+        self.cabeza = None
