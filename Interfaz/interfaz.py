@@ -4,6 +4,7 @@ from Logica.seleccion_archivo import seleccionar_archivo
 from Logica.XML_reader import cargar_maquetas_desde_xml
 from Logica.gestion_maquetas import ListaMaquetas, NodoMaqueta
 
+
 def iniciar_interfaz(lista_maquetas):
     # Configurar la apariencia de la ventana principal
     app = tk.Tk()
@@ -30,8 +31,31 @@ def iniciar_interfaz(lista_maquetas):
         lista_maquetas.eliminar_todas()
         actualizar_combobox()
 
-    def boton_resolucion_maquetas():
+
+
+    def boton_resolucion_maquetas(lista_maquetas, combo_maquetas):
         print("boton_resolucion_maquetas presionado")
+
+        # Obtener el nombre de la maqueta seleccionada en el combobox
+        nombre_maqueta = combo_maquetas.get()
+
+        # Obtener la maqueta de la lista
+        maqueta = lista_maquetas.buscar_por_nombre(nombre_maqueta)
+
+        if maqueta:
+            # Asegúrate de que tu inicio esté correctamente definido
+            inicio = (maqueta.coordenada_fila, maqueta.coordenada_columna)  # Asume que la entrada es el inicio
+
+            # Llama a dfs
+            objetivos_visitados, movimientos = maqueta.dfs(inicio, maqueta.objetivos)
+
+            # Genera las imágenes
+            maqueta.generar_dot('laberinto')
+            maqueta.generar_dot_dfs(movimientos, 'laberinto_dfs')
+
+            # Muestra las imágenes
+            maqueta.mostrar_imagen('laberinto.png')
+            maqueta.mostrar_imagen('laberinto_dfs.png')
 
     def boton_ayuda():
         print("boton_ayuda presionado")
@@ -59,6 +83,13 @@ def iniciar_interfaz(lista_maquetas):
             print(f"Número de filas: {num_filas}")
             print(f"Número de columnas: {num_columnas}")
 
+            # Crear el laberinto
+            laberinto = maqueta.crear_laberinto()
+
+            # Generar el archivo .dot
+            maqueta.generar_dot(nombre_archivo='laberinto')
+            maqueta.mostrar_imagen('laberinto.png')
+
     # Botón para cargar XML
     button_xml = tk.Button(master=app, text="Cargar XML", command=boton_XML)
     button_xml.grid(row=0, column=1, padx=20, pady=20)
@@ -66,7 +97,7 @@ def iniciar_interfaz(lista_maquetas):
     button_gestion_maquetas = tk.Button(master=app, text="Limpiar Lista", command=boton_gestion_maquetas)
     button_gestion_maquetas.grid(row=0, column=2, padx=20, pady=20)
     # Botón para resolución de maquetas
-    button_resolucion_maquetas = tk.Button(master=app, text="Resolución de maquetas", command=boton_resolucion_maquetas)
+    button_resolucion_maquetas = tk.Button(master=app, text="Resolución de maquetas", command=lambda: boton_resolucion_maquetas(lista_maquetas, combo_maquetas))
     button_resolucion_maquetas.grid(row=0, column=3, padx=20, pady=20)
     # Botón para ayuda
     button_ayuda = tk.Button(master=app, text="Ayuda", command=boton_ayuda)
