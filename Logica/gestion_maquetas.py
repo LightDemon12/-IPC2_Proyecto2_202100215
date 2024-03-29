@@ -92,7 +92,17 @@ class NodoMaqueta:
         nodo_actual = self.estructura
         for i in range(num_filas):
             for j in range(num_columnas):
-                laberinto.agregar_nodo(nodo_actual.caracter, i, j)
+                caracter = nodo_actual.caracter
+                if (i, j) == (self.coordenada_fila, self.coordenada_columna):  # Si es la entrada
+                    caracter = '#'
+                else:
+                    objetivo_actual = self.objetivos
+                    while objetivo_actual:
+                        if i == objetivo_actual.coordenada_fila and j == objetivo_actual.coordenada_columna:  # Si es un objetivo
+                            caracter = '|'
+                            break
+                        objetivo_actual = objetivo_actual.siguiente
+                laberinto.agregar_nodo(caracter, i, j)
                 nodo_actual = nodo_actual.siguiente
         return laberinto  # Devuelve el laberinto creado
 
@@ -214,7 +224,19 @@ class ListaMaquetas:
     def eliminar_todas(self):
         self.cabeza = None
 
+    def obtener_num_filas(self, nombre):
+        nodo_maqueta = self.buscar_por_nombre(nombre)
+        if nodo_maqueta is not None:
+            return nodo_maqueta.num_filas
+        else:
+            return None
 
+    def obtener_num_columnas(self, nombre):
+        nodo_maqueta = self.buscar_por_nombre(nombre)
+        if nodo_maqueta is not None:
+            return nodo_maqueta.num_columnas
+        else:
+            return None
 
 class NodoDFS:
     def __init__(self, caracter, fila=None, columna=None, siguiente=None):
@@ -258,63 +280,107 @@ class ListaDFS:
             nodo_actual = nodo_actual.siguiente
         return None
 
-
-class NodoLista:
-    def __init__(self, value=None, next=None):
-        self.value = value
-        self.next = next
-
-class ListaCamino:
-    def __init__(self):
-        self.cabeza = None
-
-    def agregar_nodo(self, nodo):
-        if self.cabeza is None:
-            self.cabeza = nodo
-        else:
-            nodo_actual = self.cabeza
-            while nodo_actual.next is not None:
-                nodo_actual = nodo_actual.next
-            nodo_actual.next = nodo
-
-    def mostrar(self):
+    def obtener_inicio(self):
         nodo_actual = self.cabeza
         while nodo_actual is not None:
-            print(nodo_actual.value)
-            nodo_actual = nodo_actual.next
+            if nodo_actual.caracter == '#':
+                return (nodo_actual.fila, nodo_actual.columna)
+            nodo_actual = nodo_actual.siguiente
+        return None
 
-    def __iter__(self):
-        nodo_actual = self.cabeza
-        while nodo_actual is not None:
-            yield nodo_actual.value
-            nodo_actual = nodo_actual.next
 
-def dfs(laberinto, filas, columnas, inicio, objetivos):
-    cabeza = NodoLista((inicio, []))
-    visitados = ListaCamino()
-    objetivos_visitados = ListaCamino()
-    camino = ListaCamino()
+def dfs(laberinto, inicio):
+    cabeza = ListaDFS()
+    inicio_fila, inicio_columna = inicio
+    cabeza.agregar_nodo('#', inicio_fila, inicio_columna)  # Añade el nodo de inicio a la cabeza
+    visitados = ListaDFS()
+    objetivos_visitados = ListaDFS()
+    recorrido = ListaDFS()  # Almacena todos los nodos a los que se mueve el algoritmo
 
-    while cabeza is not None:
-        (fila, columna), camino_nodo = cabeza.value
-        cabeza = cabeza.next
+    while cabeza.cabeza is not None:
+        nodo_actual = cabeza.pop()
+        recorrido.agregar_nodo(nodo_actual.caracter, nodo_actual.fila, nodo_actual.columna)  # Agrega el nodo a recorrido
+        fila, columna = nodo_actual.fila, nodo_actual.columna
 
-        if (fila, columna) in visitados:
+        if visitados.obtener_celda(fila, columna) is not None:  # Si el nodo ya ha sido visitado
             continue
 
-        visitados.agregar_nodo(NodoLista((fila, columna)))
-        camino.agregar_nodo(NodoLista((fila, columna)))
+        print(f'Visitando nodo: ({fila}, {columna})')  # Imprime las coordenadas del nodo visitado
 
-        if (fila, columna) in objetivos:
-            objetivos_visitados.agregar_nodo(NodoLista(camino_nodo))
+        if nodo_actual.caracter == '|':  # Si el nodo es un objetivo
+            objetivos_visitados.agregar_nodo(nodo_actual.caracter, fila, columna)
 
-        if fila > 0 and laberinto.obtener_celda(fila-1, columna) != '*':
-            cabeza = NodoLista(((fila-1, columna), camino_nodo), cabeza)
-        if fila < filas-1 and laberinto.obtener_celda(fila+1, columna) != '*':
-            cabeza = NodoLista(((fila+1, columna), camino_nodo), cabeza)
-        if columna > 0 and laberinto.obtener_celda(fila, columna-1) != '*':
-            cabeza = NodoLista(((fila, columna-1), camino_nodo), cabeza)
-        if columna < columnas-1 and laberinto.obtener_celda(fila, columna+1) != '*':
-            cabeza = NodoLista(((fila, columna+1), camino_nodo), cabeza)
+        # Mover hacia arriba
+        dx, dy = -1, 0
+        vecino = laberinto.obtener_celda(fila + dx, columna + dy)
+        if vecino is not None and vecino.caracter != '*':
+            cabeza.agregar_nodo(vecino.caracter, fila + dx, columna + dy)
+
+        # Mover hacia abajo
+        dx, dy = 1, 0
+        vecino = laberinto.obtener_celda(fila + dx, columna + dy)
+        if vecino is not None and vecino.caracter != '*':
+            cabeza.agregar_nodo(vecino.caracter, fila + dx, columna + dy)
+
+        # Mover hacia la izquierda
+        dx, dy = 0, -1
+        vecino = laberinto.obtener_celda(fila + dx, columna + dy)
+        if vecino is not None and vecino.caracter != '*':
+            cabeza.agregar_nodo(vecino.caracter, fila + dx, columna + dy)
+
+        # Mover hacia la derecha
+        dx, dy = 0, 1
+        vecino = laberinto.obtener_celda(fila + dx, columna + dy)
+        if vecino is not None and vecino.caracter != '*':
+            cabeza.agregar_nodo(vecino.caracter, fila + dx, columna + dy)
+
+        visitados.agregar_nodo(nodo_actual.caracter, fila, columna)  # Marca el nodo como visitado después de explorar todos sus vecinos
+
+    print("Recorrido completo:")
+    recorrido.mostrarListaDFS()  # Muestra el recorrido completo
 
     return objetivos_visitados
+
+
+
+
+def generar_dot_DFS(lista_maquetas, nombre_maqueta, visitados, nombre_archivo='recorrido_dfs'):
+    dot = Digraph('G', node_attr={'shape': 'plaintext'}, format='png')
+
+    # Obtener la maqueta de la lista
+    maqueta = lista_maquetas.buscar_por_nombre(nombre_maqueta)
+
+    # Generar la tabla a partir de la estructura de la maqueta
+    tabla = '<TABLE border="1" cellspacing="0" cellpadding="10">\n'
+    nodo_actual = maqueta.estructura
+    for i in range(maqueta.num_filas):
+        tabla += '<TR>\n'
+        for j in range(maqueta.num_columnas):
+            color = 'black' if nodo_actual.caracter == '*' else 'white'
+
+            if i == maqueta.coordenada_fila and j == maqueta.coordenada_columna:
+                color = 'green'  # La entrada es un cuadro verde
+
+            objetivo_actual = maqueta.objetivos
+            while objetivo_actual:
+                if i == objetivo_actual.coordenada_fila and j == objetivo_actual.coordenada_columna:
+                    color = 'red'  # Los objetivos son cuadros rojos
+                    break
+                objetivo_actual = objetivo_actual.siguiente
+
+            # Comprobar si el nodo actual está en la lista de nodos visitados
+            nodo_visitado = visitados.cabeza
+            while nodo_visitado is not None:
+                if nodo_visitado.fila == i and nodo_visitado.columna == j:
+                    color = 'blue'  # Los nodos visitados son cuadros azules
+                    break
+                nodo_visitado = nodo_visitado.siguiente
+
+            tabla += f'<TD BGCOLOR="{color}"></TD>\n'
+            nodo_actual = nodo_actual.siguiente
+        tabla += '</TR>\n'
+    tabla += '</TABLE>'
+
+    dot.node('piso', label='<'+tabla+'>')
+    dot.render(nombre_archivo, view=False)
+    

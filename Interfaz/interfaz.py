@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from Logica.seleccion_archivo import seleccionar_archivo
 from Logica.XML_reader import cargar_maquetas_desde_xml
-from Logica.gestion_maquetas import ListaMaquetas, NodoMaqueta, ListaDFS, NodoDFS, dfs, ListaCamino
+from Logica.gestion_maquetas import ListaMaquetas, NodoMaqueta, ListaDFS, NodoDFS, dfs, generar_dot_DFS
 
 
 def iniciar_interfaz(lista_maquetas):
@@ -43,24 +43,21 @@ def iniciar_interfaz(lista_maquetas):
         # Crear el laberinto DFS a partir de la maqueta seleccionada
         laberinto = maqueta.crear_laberintoDFS(maqueta.num_filas, maqueta.num_columnas)
 
+        # Obtener las coordenadas de inicio del laberinto
+        inicio = laberinto.obtener_inicio()
+
+        # Llamar a la función dfs con el laberinto y las coordenadas de inicio
+        visitados = dfs(laberinto, inicio)
+
         # Mostrar el laberinto DFS
         laberinto.mostrarListaDFS()
-        # Definir las variables
-        filas = maqueta.num_filas
-        columnas = maqueta.num_columnas
-        inicio = (maqueta.coordenada_fila, maqueta.coordenada_columna)
-        objetivos = maqueta.obtener_objetivos()
-        # Crear una instancia de NodoMaqueta
-        nodo_maqueta = NodoMaqueta(maqueta.nombre, maqueta.num_filas, maqueta.num_columnas, maqueta.coordenada_fila, maqueta.coordenada_columna)
 
-        # Obtener los objetivos desde la instancia de NodoMaqueta
-        objetivos = [(objetivo.coordenada_fila, objetivo.coordenada_columna) for objetivo in nodo_maqueta.obtener_objetivos()]
-        resultados = dfs(laberinto, filas, columnas, inicio, objetivos)
-        
-        # Crear una instancia de ListaCamino
-        lista_camino = ListaCamino()
-        lista_camino.mostrar()
+        # Mostrar los nodos visitados
+        print("Nodos visitados:")
+        visitados.mostrarListaDFS()
 
+        # Generar el archivo .dot
+        generar_dot_DFS(lista_maquetas, nombre_maqueta, visitados, 'recorrido_dfs')
 
 
     def boton_ayuda():

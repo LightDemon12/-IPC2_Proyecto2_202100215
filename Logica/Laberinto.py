@@ -49,34 +49,65 @@ class NodoLista:
 def aplanar_lista(lista_de_listas):
     return [item for sublist in lista_de_listas for item in sublist]
 
+class NodoLista:
+    def __init__(self, value, next=None):
+        self.value = value
+        self.next = next
+
+def obtener_celda(laberinto, fila, columna):
+    return laberinto[fila][columna]
+
 def dfs(laberinto, filas, columnas, inicio, objetivos):
-    cabeza = NodoLista((inicio, []))
-    visitados = set()
-    objetivos_visitados = []
+    cabeza = NodoLista((inicio, []))  # Lista enlazada para almacenar los nodos a visitar
+    visitados = NodoLista(None)  # Lista enlazada para almacenar los nodos visitados
+    objetivos_visitados = NodoLista(None)  # Lista enlazada para almacenar los objetivos visitados
 
     while cabeza is not None:
         (fila, columna), camino = cabeza.value
+        nodo = cabeza
         cabeza = cabeza.next
+        nodo.next = None
 
-        if (fila, columna) in visitados:
-            continue
+        # Verificar si el nodo ya ha sido visitado
+        nodo_visitado = visitados
+        while nodo_visitado is not None:
+            if nodo_visitado.value == (fila, columna):
+                break
+            nodo_visitado = nodo_visitado.next
+        else:
+            # Si el nodo no ha sido visitado, agregarlo a la lista de visitados
+            visitados = NodoLista((fila, columna), visitados)
 
-        visitados.add((fila, columna))
-        camino = camino + [(fila, columna)]
+            camino = NodoLista((fila, columna), camino)
 
-        if (fila, columna) in objetivos:
-            objetivos_visitados.append(camino)
+            # Verificar si el nodo es un objetivo
+            for objetivo in objetivos:
+                if (fila, columna) == objetivo:
+                    objetivos_visitados = NodoLista(camino, objetivos_visitados)
+                    break
 
-        if fila > 0 and obtener_celda(laberinto, fila-1, columna) != '*':
-            cabeza = NodoLista(((fila-1, columna), camino), cabeza)
-        if fila < filas-1 and obtener_celda(laberinto, fila+1, columna) != '*':
-            cabeza = NodoLista(((fila+1, columna), camino), cabeza)
-        if columna > 0 and obtener_celda(laberinto, fila, columna-1) != '*':
-            cabeza = NodoLista(((fila, columna-1), camino), cabeza)
-        if columna < columnas-1 and obtener_celda(laberinto, fila, columna+1) != '*':
-            cabeza = NodoLista(((fila, columna+1), camino), cabeza)
+            # Agregar los vecinos del nodo a la lista de nodos a visitar
+            if fila > 0 and obtener_celda(laberinto, fila-1, columna) != '*':
+                cabeza = NodoLista(((fila-1, columna), camino), cabeza)
+            if fila < filas-1 and obtener_celda(laberinto, fila+1, columna) != '*':
+                cabeza = NodoLista(((fila+1, columna), camino), cabeza)
+            if columna > 0 and obtener_celda(laberinto, fila, columna-1) != '*':
+                cabeza = NodoLista(((fila, columna-1), camino), cabeza)
+            if columna < columnas-1 and obtener_celda(laberinto, fila, columna+1) != '*':
+                cabeza = NodoLista(((fila, columna+1), camino), cabeza)
 
-    return objetivos_visitados
+    # Convertir la lista enlazada de objetivos visitados a una lista de Python
+    caminos = []
+    while objetivos_visitados is not None:
+        camino = []
+        nodo = objetivos_visitados.value
+        while nodo is not None:
+            camino.append(nodo.value)
+            nodo = nodo.next
+        caminos.append(camino)
+        objetivos_visitados = objetivos_visitados.next
+
+    return caminos
 
 def generar_dot(laberinto, filas, columnas, objetivos, entrada, recorrido=None, nombre_archivo='laberinto'):
     dot = Digraph('G', node_attr={'shape': 'plaintext'}, format='png')
