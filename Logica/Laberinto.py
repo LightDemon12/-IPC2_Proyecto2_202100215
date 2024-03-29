@@ -139,3 +139,75 @@ ventana2 = mostrar_imagen('laberinto_con_recorrido.png')
 # Llamar a mainloop una vez que todas las ventanas estén creadas
 ventana_principal.mainloop()
 
+class NodoEstructura:
+
+
+    def generar_dot_dfs(self, movimientos, nombre_archivo='laberinto_dfs'):
+        dot = Digraph('G', node_attr={'shape': 'plaintext'}, format='png')
+
+        tabla = '<TABLE border="1" cellspacing="0" cellpadding="10">\n'
+        nodo_actual = self.estructura
+        for i in range(self.num_filas):
+            tabla += '<TR>\n'
+            for j in range(self.num_columnas):
+                color = 'black' if nodo_actual.caracter == '*' else 'white'  
+
+                if i == self.coordenada_fila  and j == self.coordenada_columna:  
+                    color = 'green'  # La entrada es un cuadro verde
+
+                objetivo_actual = self.objetivos
+                while objetivo_actual:
+                    if i == objetivo_actual.coordenada_fila and j == objetivo_actual.coordenada_columna:  
+                        color = 'red'  # Los objetivos son cuadros rojos
+                        break
+                    objetivo_actual = objetivo_actual.siguiente
+
+                movimiento_actual = movimientos.head
+                while movimiento_actual:
+                    if i == movimiento_actual.nodo.coordenada_fila and j == movimiento_actual.nodo.coordenada_columna:
+                        color = 'blue'  # Los movimientos son cuadros azules
+                        break
+                    movimiento_actual = movimiento_actual.next
+
+                tabla += f'<TD BGCOLOR="{color}"></TD>\n'
+                nodo_actual = nodo_actual.siguiente
+            tabla += '</TR>\n'
+        tabla += '</TABLE>'
+
+        dot.node('piso', label='<'+tabla+'>')
+        dot.render(nombre_archivo, view=False)
+
+    def get_vecinos(self, nodo):
+        vecinos = []
+        actual = self.estructura
+        while actual:
+            if abs(actual.fila - nodo.fila) + abs(actual.columna - nodo.columna) == 1:  # Si el nodo actual es un vecino
+                vecinos.append(actual)
+            actual = actual.siguiente
+        return vecinos
+    
+    def dfs(nombre_maqueta, inicio, objetivos):
+        laberinto = nombre_maqueta.estructura
+        cabeza = NodoEstructura(inicio)
+        visitados = set()
+        objetivos_visitados = []
+
+        while cabeza is not None:
+            nodo_actual = cabeza
+            cabeza = cabeza.siguiente
+
+            if (nodo_actual.fila, nodo_actual.columna) in visitados:
+                continue
+
+            visitados.add((nodo_actual.fila, nodo_actual.columna))
+            camino = camino + [nodo_actual]
+
+            if nodo_actual in objetivos:
+                objetivos_visitados.append(camino)
+
+            for vecino in nombre_maqueta.get_vecinos(nodo_actual):
+                if vecino.caracter != '*':
+                    vecino.siguiente = cabeza
+                    cabeza = vecino
+
+        return objetivos_visitados

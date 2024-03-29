@@ -16,45 +16,7 @@ class NodoObjetivo:
         self.coordenada_columna = coordenada_columna
         self.siguiente = None
         self.anterior = None
-class NodoPila:
-    def __init__(self, value, next=None):
-        self.value = value
-        self.next = next
 
-class Pila:
-    def __init__(self):
-        self.top = None
-
-    def push(self, value):
-        self.top = NodoPila(value, self.top)
-
-    def pop(self):
-        if self.top is None:
-            return None
-        value = self.top.value
-        self.top = self.top.next
-        return value
-
-    def is_empty(self):
-        return self.top is None
-
-class NodoMovimiento:
-    def __init__(self, nodo, next=None):
-        self.nodo = nodo
-        self.next = next
-
-class ListaMovimientos:
-    def __init__(self):
-        self.head = None
-
-    def append(self, nodo):
-        if not self.head:
-            self.head = NodoMovimiento(nodo)
-        else:
-            current = self.head
-            while current.next:
-                current = current.next
-            current.next = NodoMovimiento(nodo)
 
 class NodoMaqueta:
     def __init__(self, nombre, num_filas, num_columnas, coordenada_fila, coordenada_columna):
@@ -105,6 +67,7 @@ class NodoMaqueta:
             objetivos += f"Nombre: {actual.nombre}, Fila: {actual.coordenada_fila}, Columna: {actual.coordenada_columna}\n"
             actual = actual.siguiente
         return objetivos[:-1]  # Eliminar la última nueva línea
+    
 
 
     def crear_laberinto(self):
@@ -118,59 +81,20 @@ class NodoMaqueta:
             nodo_laberinto.siguiente = NodoEstructura(nodo_actual.caracter)
             nodo_laberinto = nodo_laberinto.siguiente
             nodo_actual = nodo_actual.siguiente
-
-
         return laberinto.siguiente  # Devuelve el laberinto creado (omitimos el primer nodo que era un placeholder)
 
 
-    def dfs(maqueta, inicio, objetivos):
-        pila = Pila()
-        pila.push((inicio, NodoEstructura(None)))  # NodoEstructura para el camino
+    def crear_laberintoDFS(self, num_filas, num_columnas):
+        # Crear una nueva lista enlazada para el laberinto
+        laberinto = ListaDFS()
 
-        visitados = NodoEstructura(None)  # Lista enlazada para los nodos visitados
-        objetivos_visitados = NodoEstructura(None)  # Lista enlazada para los objetivos visitados
-        movimientos = ListaMovimientos()  # Lista enlazada para los movimientos
-
-        while not pila.is_empty():
-            nodo_actual, camino = pila.pop()
-
-            # Comprobar si el nodo actual ya ha sido visitado
-            actual = visitados
-            while actual:
-                if actual.caracter == nodo_actual:
-                    break
-                actual = actual.siguiente
-            else:  # Si el nodo actual no ha sido visitado
-                # Marcar el nodo actual como visitado
-                visitado = NodoEstructura(nodo_actual)
-                visitado.siguiente = visitados
-                visitados = visitado
-
-                # Añadir el nodo actual al camino
-                paso = NodoEstructura(nodo_actual)
-                paso.siguiente = camino
-                camino = paso
-
-                # Añadir el nodo actual a los movimientos
-                movimientos.append(nodo_actual)
-
-                # Comprobar si el nodo actual es uno de los objetivos
-                objetivo_actual = objetivos
-                while objetivo_actual:
-                    if objetivo_actual.nombre == nodo_actual:
-                        # Añadir el camino al nodo actual a los objetivos visitados
-                        objetivo_visitado = NodoEstructura(camino)
-                        objetivo_visitado.siguiente = objetivos_visitados
-                        objetivos_visitados = objetivo_visitado
-                        break
-                    objetivo_actual = objetivo_actual.siguiente
-
-                # Para cada vecino del nodo actual, si no está bloqueado, añádelo a la pila
-                # Nota: necesitarás implementar un método para obtener los vecinos de un nodo en tu maqueta
-                for vecino in maqueta.get_vecinos(nodo_actual):
-                    pila.push((vecino, camino))
-
-        return objetivos_visitados.siguiente, movimientos  # Devuelve los objetivos visitados y los movimientos
+        # Copiar la estructura de la maqueta a la lista enlazada del laberinto
+        nodo_actual = self.estructura
+        for i in range(num_filas):
+            for j in range(num_columnas):
+                laberinto.agregar_nodo(nodo_actual.caracter, i, j)
+                nodo_actual = nodo_actual.siguiente
+        return laberinto  # Devuelve el laberinto creado
 
     def generar_dot(self, nombre_archivo='laberinto'):
         dot = Digraph('G', node_attr={'shape': 'plaintext'}, format='png')
@@ -201,40 +125,6 @@ class NodoMaqueta:
         dot.node('piso', label='<'+tabla+'>')
         dot.render(nombre_archivo, view=False)
 
-    def generar_dot_dfs(self, movimientos, nombre_archivo='laberinto_dfs'):
-        dot = Digraph('G', node_attr={'shape': 'plaintext'}, format='png')
-
-        tabla = '<TABLE border="1" cellspacing="0" cellpadding="10">\n'
-        nodo_actual = self.estructura
-        for i in range(self.num_filas):
-            tabla += '<TR>\n'
-            for j in range(self.num_columnas):
-                color = 'black' if nodo_actual.caracter == '*' else 'white'  
-
-                if i == self.coordenada_fila  and j == self.coordenada_columna:  
-                    color = 'green'  # La entrada es un cuadro verde
-
-                objetivo_actual = self.objetivos
-                while objetivo_actual:
-                    if i == objetivo_actual.coordenada_fila and j == objetivo_actual.coordenada_columna:  
-                        color = 'red'  # Los objetivos son cuadros rojos
-                        break
-                    objetivo_actual = objetivo_actual.siguiente
-
-                movimiento_actual = movimientos.head
-                while movimiento_actual:
-                    if i == movimiento_actual.nodo.coordenada_fila and j == movimiento_actual.nodo.coordenada_columna:
-                        color = 'blue'  # Los movimientos son cuadros azules
-                        break
-                    movimiento_actual = movimiento_actual.next
-
-                tabla += f'<TD BGCOLOR="{color}"></TD>\n'
-                nodo_actual = nodo_actual.siguiente
-            tabla += '</TR>\n'
-        tabla += '</TABLE>'
-
-        dot.node('piso', label='<'+tabla+'>')
-        dot.render(nombre_archivo, view=False)
 
     def mostrar_imagen(self, ruta_imagen):
         ventana = tk.Toplevel()  # Cambiar tk.Tk() a tk.Toplevel()
@@ -326,4 +216,105 @@ class ListaMaquetas:
 
 
 
+class NodoDFS:
+    def __init__(self, caracter, fila=None, columna=None, siguiente=None):
+        self.caracter = caracter
+        self.fila = fila
+        self.columna = columna
+        self.siguiente = siguiente
 
+
+class ListaDFS:
+    def __init__(self):
+        self.cabeza = None
+
+    def agregar_nodo(self, caracter, fila, columna):
+        nuevo_nodo = NodoDFS(caracter, fila, columna)
+        if self.cabeza is None:
+            self.cabeza = nuevo_nodo
+        else:
+            nodo_actual = self.cabeza
+            while nodo_actual.siguiente is not None:
+                nodo_actual = nodo_actual.siguiente
+            nodo_actual.siguiente = nuevo_nodo
+    def pop(self):
+        if self.cabeza is None:
+            return None
+        nodo = self.cabeza
+        self.cabeza = self.cabeza.siguiente
+        return nodo
+    
+    def mostrarListaDFS(self):
+        nodo_actual = self.cabeza
+        while nodo_actual is not None:
+            print(f'Caracter: {nodo_actual.caracter}, Fila: {nodo_actual.fila}, Columna: {nodo_actual.columna}')
+            nodo_actual = nodo_actual.siguiente
+
+    def obtener_celda(self, fila, columna):
+        nodo_actual = self.cabeza
+        while nodo_actual is not None:
+            if nodo_actual.fila == fila and nodo_actual.columna == columna:
+                return nodo_actual
+            nodo_actual = nodo_actual.siguiente
+        return None
+
+
+class NodoLista:
+    def __init__(self, value=None, next=None):
+        self.value = value
+        self.next = next
+
+class ListaCamino:
+    def __init__(self):
+        self.cabeza = None
+
+    def agregar_nodo(self, nodo):
+        if self.cabeza is None:
+            self.cabeza = nodo
+        else:
+            nodo_actual = self.cabeza
+            while nodo_actual.next is not None:
+                nodo_actual = nodo_actual.next
+            nodo_actual.next = nodo
+
+    def mostrar(self):
+        nodo_actual = self.cabeza
+        while nodo_actual is not None:
+            print(nodo_actual.value)
+            nodo_actual = nodo_actual.next
+
+    def __iter__(self):
+        nodo_actual = self.cabeza
+        while nodo_actual is not None:
+            yield nodo_actual.value
+            nodo_actual = nodo_actual.next
+
+def dfs(laberinto, filas, columnas, inicio, objetivos):
+    cabeza = NodoLista((inicio, []))
+    visitados = ListaCamino()
+    objetivos_visitados = ListaCamino()
+    camino = ListaCamino()
+
+    while cabeza is not None:
+        (fila, columna), camino_nodo = cabeza.value
+        cabeza = cabeza.next
+
+        if (fila, columna) in visitados:
+            continue
+
+        visitados.agregar_nodo(NodoLista((fila, columna)))
+        camino.agregar_nodo(NodoLista((fila, columna)))
+
+        if (fila, columna) in objetivos:
+            objetivos_visitados.agregar_nodo(NodoLista(camino_nodo))
+
+        if fila > 0 and laberinto.obtener_celda(fila-1, columna) != '*':
+            cabeza = NodoLista(((fila-1, columna), camino_nodo), cabeza)
+        if fila < filas-1 and laberinto.obtener_celda(fila+1, columna) != '*':
+            cabeza = NodoLista(((fila+1, columna), camino_nodo), cabeza)
+        if columna > 0 and laberinto.obtener_celda(fila, columna-1) != '*':
+            cabeza = NodoLista(((fila, columna-1), camino_nodo), cabeza)
+        if columna < columnas-1 and laberinto.obtener_celda(fila, columna+1) != '*':
+            cabeza = NodoLista(((fila, columna+1), camino_nodo), cabeza)
+
+    return objetivos_visitados

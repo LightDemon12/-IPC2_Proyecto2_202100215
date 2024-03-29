@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from Logica.seleccion_archivo import seleccionar_archivo
 from Logica.XML_reader import cargar_maquetas_desde_xml
-from Logica.gestion_maquetas import ListaMaquetas, NodoMaqueta
+from Logica.gestion_maquetas import ListaMaquetas, NodoMaqueta, ListaDFS, NodoDFS, dfs, ListaCamino
 
 
 def iniciar_interfaz(lista_maquetas):
@@ -31,8 +31,6 @@ def iniciar_interfaz(lista_maquetas):
         lista_maquetas.eliminar_todas()
         actualizar_combobox()
 
-
-
     def boton_resolucion_maquetas(lista_maquetas, combo_maquetas):
         print("boton_resolucion_maquetas presionado")
 
@@ -42,20 +40,28 @@ def iniciar_interfaz(lista_maquetas):
         # Obtener la maqueta de la lista
         maqueta = lista_maquetas.buscar_por_nombre(nombre_maqueta)
 
-        if maqueta:
-            # Asegúrate de que tu inicio esté correctamente definido
-            inicio = (maqueta.coordenada_fila, maqueta.coordenada_columna)  # Asume que la entrada es el inicio
+        # Crear el laberinto DFS a partir de la maqueta seleccionada
+        laberinto = maqueta.crear_laberintoDFS(maqueta.num_filas, maqueta.num_columnas)
 
-            # Llama a dfs
-            objetivos_visitados, movimientos = maqueta.dfs(inicio, maqueta.objetivos)
+        # Mostrar el laberinto DFS
+        laberinto.mostrarListaDFS()
+        # Definir las variables
+        filas = maqueta.num_filas
+        columnas = maqueta.num_columnas
+        inicio = (maqueta.coordenada_fila, maqueta.coordenada_columna)
+        objetivos = maqueta.obtener_objetivos()
+        # Crear una instancia de NodoMaqueta
+        nodo_maqueta = NodoMaqueta(maqueta.nombre, maqueta.num_filas, maqueta.num_columnas, maqueta.coordenada_fila, maqueta.coordenada_columna)
 
-            # Genera las imágenes
-            maqueta.generar_dot('laberinto')
-            maqueta.generar_dot_dfs(movimientos, 'laberinto_dfs')
+        # Obtener los objetivos desde la instancia de NodoMaqueta
+        objetivos = [(objetivo.coordenada_fila, objetivo.coordenada_columna) for objetivo in nodo_maqueta.obtener_objetivos()]
+        resultados = dfs(laberinto, filas, columnas, inicio, objetivos)
+        
+        # Crear una instancia de ListaCamino
+        lista_camino = ListaCamino()
+        lista_camino.mostrar()
 
-            # Muestra las imágenes
-            maqueta.mostrar_imagen('laberinto.png')
-            maqueta.mostrar_imagen('laberinto_dfs.png')
+
 
     def boton_ayuda():
         print("boton_ayuda presionado")
