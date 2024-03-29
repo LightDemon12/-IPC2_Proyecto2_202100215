@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from Logica.seleccion_archivo import seleccionar_archivo
 from Logica.XML_reader import cargar_maquetas_desde_xml
-from Logica.gestion_maquetas import ListaMaquetas, NodoMaqueta, ListaDFS, NodoDFS, dfs, generar_dot_DFS
+from Logica.gestion_maquetas import ListaMaquetas, NodoMaqueta, ListaDFS, NodoDFS, dfs, generar_dot_DFS, generar_dot_objetivos_alcanzados, mostrar_imagen, contar_objetivos_visitados
 
 
 def iniciar_interfaz(lista_maquetas):
@@ -47,17 +47,30 @@ def iniciar_interfaz(lista_maquetas):
         inicio = laberinto.obtener_inicio()
 
         # Llamar a la función dfs con el laberinto y las coordenadas de inicio
-        visitados = dfs(laberinto, inicio)
-
-        # Mostrar el laberinto DFS
-        laberinto.mostrarListaDFS()
+        objetivos_visitados, recorrido_completo = dfs(laberinto, inicio)
 
         # Mostrar los nodos visitados
         print("Nodos visitados:")
-        visitados.mostrarListaDFS()
+        objetivos_visitados.mostrarListaDFS()
+
+        # Mostrar el recorrido completo
+        print("Recorrido completo:")
+        recorrido_completo.mostrarListaRecorrido()
 
         # Generar el archivo .dot
-        generar_dot_DFS(lista_maquetas, nombre_maqueta, visitados, 'recorrido_dfs')
+        generar_dot_DFS(lista_maquetas, nombre_maqueta, recorrido_completo, objetivos_visitados, 'recorrido_dfs')
+        # Mostrar la imagen generada
+        mostrar_imagen('recorrido_dfs.png')
+        generar_dot_objetivos_alcanzados(lista_maquetas, nombre_maqueta, objetivos_visitados, 'objetivos_alcanzados')
+        # Mostrar la imagen generada
+        mostrar_imagen('objetivos_alcanzados.png')
+        num_objetivos_visitados, total_objetivos = contar_objetivos_visitados(maqueta, objetivos_visitados)
+
+
+        if num_objetivos_visitados == total_objetivos:
+            print(f'Se visitaron todos los {total_objetivos} objetivos.')
+        else:
+            print(f'Solo se visitaron {num_objetivos_visitados} de {total_objetivos} objetivos.')
 
 
     def boton_ayuda():

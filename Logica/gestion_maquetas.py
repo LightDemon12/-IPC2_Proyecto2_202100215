@@ -123,7 +123,7 @@ class NodoMaqueta:
                 objetivo_actual = self.objetivos
                 while objetivo_actual:
                     if i == objetivo_actual.coordenada_fila and j == objetivo_actual.coordenada_columna:  
-                        color = 'red'  # Los objetivos son cuadros rojos
+                        color = 'yellow'  # Los objetivos son cuadros rojos
                         break
                     objetivo_actual = objetivo_actual.siguiente
 
@@ -288,18 +288,45 @@ class ListaDFS:
             nodo_actual = nodo_actual.siguiente
         return None
 
+class ListaRecorrido:
+    def __init__(self):
+        self.cabeza = None
 
+    def agregar_nodo(self, caracter, fila, columna):
+        nuevo_nodo = NodoDFS(caracter, fila, columna)
+        if self.cabeza is None:
+            self.cabeza = nuevo_nodo
+        else:
+            nodo_actual = self.cabeza
+            while nodo_actual.siguiente is not None:
+                nodo_actual = nodo_actual.siguiente
+            nodo_actual.siguiente = nuevo_nodo
+
+    def mostrarListaRecorrido(self):
+        nodo_actual = self.cabeza
+        while nodo_actual is not None:
+            print(f'Caracter: {nodo_actual.caracter}, Fila: {nodo_actual.fila}, Columna: {nodo_actual.columna}')
+            nodo_actual = nodo_actual.siguiente
+
+    def obtener_celda(self, fila, columna):
+        nodo_actual = self.cabeza
+        while nodo_actual is not None:
+            if nodo_actual.fila == fila and nodo_actual.columna == columna:
+                return nodo_actual
+            nodo_actual = nodo_actual.siguiente
+        return None
+    
 def dfs(laberinto, inicio):
     cabeza = ListaDFS()
     inicio_fila, inicio_columna = inicio
     cabeza.agregar_nodo('#', inicio_fila, inicio_columna)  # Añade el nodo de inicio a la cabeza
     visitados = ListaDFS()
     objetivos_visitados = ListaDFS()
-    recorrido = ListaDFS()  # Almacena todos los nodos a los que se mueve el algoritmo
+    recorrido_completo = ListaRecorrido()  # Almacena todos los nodos a los que se mueve el algoritmo
 
     while cabeza.cabeza is not None:
         nodo_actual = cabeza.pop()
-        recorrido.agregar_nodo(nodo_actual.caracter, nodo_actual.fila, nodo_actual.columna)  # Agrega el nodo a recorrido
+        recorrido_completo.agregar_nodo(nodo_actual.caracter, nodo_actual.fila, nodo_actual.columna)  # Agrega el nodo a recorrido_completo
         fila, columna = nodo_actual.fila, nodo_actual.columna
 
         if visitados.obtener_celda(fila, columna) is not None:  # Si el nodo ya ha sido visitado
@@ -337,14 +364,59 @@ def dfs(laberinto, inicio):
         visitados.agregar_nodo(nodo_actual.caracter, fila, columna)  # Marca el nodo como visitado después de explorar todos sus vecinos
 
     print("Recorrido completo:")
-    recorrido.mostrarListaDFS()  # Muestra el recorrido completo
+    recorrido_completo.mostrarListaRecorrido()  # Muestra el recorrido completo
 
-    return objetivos_visitados
-
-
+    return objetivos_visitados, recorrido_completo
 
 
-def generar_dot_DFS(lista_maquetas, nombre_maqueta, visitados, nombre_archivo='recorrido_dfs'):
+
+
+def generar_dot_DFS(lista_maquetas, nombre_maqueta, recorrido_completo, visitados, nombre_archivo='recorrido_dfs'):
+    dot = Digraph('G', node_attr={'shape': 'plaintext'}, format='png')
+
+    # Obtener la maqueta de la lista
+    maqueta = lista_maquetas.buscar_por_nombre(nombre_maqueta)
+
+    # Generar la tabla a partir de la estructura de la maqueta
+    tabla = '<TABLE border="1" cellspacing="0" cellpadding="10">\n'
+    nodo_actual = maqueta.estructura
+    for i in range(maqueta.num_filas):
+        tabla += '<TR>\n'
+        for j in range(maqueta.num_columnas):
+            color = 'black' if nodo_actual.caracter == '*' else 'white'
+
+            if i == maqueta.coordenada_fila and j == maqueta.coordenada_columna:
+                color = 'green'  # La entrada es un cuadro verde
+
+            objetivo_actual = maqueta.objetivos
+            while objetivo_actual:
+                if i == objetivo_actual.coordenada_fila and j == objetivo_actual.coordenada_columna:
+                    color = 'red'  # Los objetivos son cuadros rojos
+                    break
+                objetivo_actual = objetivo_actual.siguiente
+
+            # Comprobar si el nodo actual está en el recorrido
+            nodo_recorrido = recorrido_completo.cabeza
+            while nodo_recorrido is not None:
+                if nodo_recorrido.fila == i and nodo_recorrido.columna == j:
+                    color = 'purple'  # Los nodos en el recorrido son cuadros morados
+                    break
+                nodo_recorrido = nodo_recorrido.siguiente
+
+            # Comprobar si el nodo actual ha sido visitado
+            nodo_visitado = visitados.obtener_celda(i, j)
+            if nodo_visitado is not None:
+                color = 'blue'  # Los nodos visitados son cuadros azules
+
+            tabla += f'<TD BGCOLOR="{color}"></TD>\n'
+            nodo_actual = nodo_actual.siguiente
+        tabla += '</TR>\n'
+    tabla += '</TABLE>'
+
+    dot.node('piso', label='<'+tabla+'>')
+    dot.render(nombre_archivo, view=False)
+
+def generar_dot_objetivos_alcanzados(lista_maquetas, nombre_maqueta, visitados, nombre_archivo='ALCANZADOS_dfs'):
     dot = Digraph('G', node_attr={'shape': 'plaintext'}, format='png')
 
     # Obtener la maqueta de la lista
@@ -383,4 +455,26 @@ def generar_dot_DFS(lista_maquetas, nombre_maqueta, visitados, nombre_archivo='r
 
     dot.node('piso', label='<'+tabla+'>')
     dot.render(nombre_archivo, view=False)
-    
+
+def mostrar_imagen(ruta_imagen):
+    ventana = tk.Toplevel()  # Cambiar tk.Tk() a tk.Toplevel()
+    imagen = Image.open(ruta_imagen)
+    imagen_tk = ImageTk.PhotoImage(imagen)
+    etiqueta_imagen = tk.Label(ventana, image=imagen_tk)
+    etiqueta_imagen.pack()
+    etiqueta_imagen.imagen = imagen_tk
+    return ventana
+
+def contar_objetivos_visitados(objetivos, visitados):
+    total_objetivos = 0
+    objetivos_visitados = 0
+    objetivo_actual = objetivos
+
+    while objetivo_actual is not None:
+        if hasattr(objetivo_actual, 'fila') and hasattr(objetivo_actual, 'columna'):
+            total_objetivos += 1
+            if visitados.obtener_celda(objetivo_actual.fila, objetivo_actual.columna) is not None:
+                objetivos_visitados += 1
+        objetivo_actual = objetivo_actual.siguiente
+
+    return objetivos_visitados, total_objetivos
