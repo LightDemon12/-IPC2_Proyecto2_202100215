@@ -75,6 +75,9 @@ def iniciar_interfaz(lista_maquetas):
     def abrir_link():
         webbrowser.open('https://github.com/LightDemon12/-IPC2_Proyecto2_202100215')
 
+    def abrir_link2():
+        webbrowser.open('https://github.com/LightDemon12/-IPC2_Proyecto2_202100215/blob/ae90635e7131adc63829f19c207b2214cac824d4/Documentación/Diagrama%20de%20clases.png')
+
     def boton_ayuda():
         print("boton_ayuda presionado")
 
@@ -91,7 +94,7 @@ def iniciar_interfaz(lista_maquetas):
         # Crear los botones
         boton1 = tk.Button(ventana_ayuda, text="Botón 1", command=abrir_link)
         boton1.grid(row=1, column=0, sticky='nsew', padx=5, pady=5)
-        boton2 = tk.Button(ventana_ayuda, text="Botón 2")
+        boton2 = tk.Button(ventana_ayuda, text="Botón 2", command=abrir_link2)
         boton2.grid(row=1, column=1, sticky='nsew', padx=5, pady=5)
         boton3 = tk.Button(ventana_ayuda, text="Botón 3")
         boton3.grid(row=1, column=2, sticky='nsew', padx=5, pady=5)
