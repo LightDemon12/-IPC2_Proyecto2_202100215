@@ -2,121 +2,28 @@ digraph G {
 	node [shape=plaintext]
 	piso [label=<<TABLE border="1" cellspacing="0" cellpadding="10">
 <TR>
-<TD BGCOLOR="black"></TD>
-<TD BGCOLOR="purple"></TD>
-<TD BGCOLOR="black"></TD>
-<TD BGCOLOR="purple"></TD>
-<TD BGCOLOR="black"></TD>
-<TD BGCOLOR="black"></TD>
-<TD BGCOLOR="black"></TD>
-<TD BGCOLOR="black"></TD>
-<TD BGCOLOR="black"></TD>
-<TD BGCOLOR="purple"></TD>
-<TD BGCOLOR="black"></TD>
-</TR>
-<TR>
-<TD BGCOLOR="purple"></TD>
-<TD BGCOLOR="purple"></TD>
-<TD BGCOLOR="purple"></TD>
-<TD BGCOLOR="purple"></TD>
-<TD BGCOLOR="purple"></TD>
-<TD BGCOLOR="purple"></TD>
-<TD BGCOLOR="purple"></TD>
-<TD BGCOLOR="purple"></TD>
-<TD BGCOLOR="purple"></TD>
-<TD BGCOLOR="purple"></TD>
-<TD BGCOLOR="purple"></TD>
-</TR>
-<TR>
-<TD BGCOLOR="black"></TD>
-<TD BGCOLOR="black"></TD>
-<TD BGCOLOR="black"></TD>
-<TD BGCOLOR="black"></TD>
-<TD BGCOLOR="black"></TD>
+<TD BGCOLOR="blue"></TD>
 <TD BGCOLOR="purple"></TD>
 <TD BGCOLOR="blue"></TD>
-<TD BGCOLOR="black"></TD>
+<TD BGCOLOR="purple"></TD>
+</TR>
+<TR>
 <TD BGCOLOR="black"></TD>
 <TD BGCOLOR="purple"></TD>
 <TD BGCOLOR="black"></TD>
+<TD BGCOLOR="purple"></TD>
 </TR>
 <TR>
-<TD BGCOLOR="white"></TD>
-<TD BGCOLOR="white"></TD>
-<TD BGCOLOR="white"></TD>
-<TD BGCOLOR="red"></TD>
-<TD BGCOLOR="black"></TD>
-<TD BGCOLOR="black"></TD>
-<TD BGCOLOR="black"></TD>
 <TD BGCOLOR="black"></TD>
 <TD BGCOLOR="blue"></TD>
 <TD BGCOLOR="purple"></TD>
-<TD BGCOLOR="black"></TD>
-</TR>
-<TR>
-<TD BGCOLOR="white"></TD>
-<TD BGCOLOR="black"></TD>
-<TD BGCOLOR="white"></TD>
-<TD BGCOLOR="white"></TD>
-<TD BGCOLOR="black"></TD>
-<TD BGCOLOR="purple"></TD>
-<TD BGCOLOR="purple"></TD>
-<TD BGCOLOR="purple"></TD>
-<TD BGCOLOR="purple"></TD>
-<TD BGCOLOR="black"></TD>
-<TD BGCOLOR="black"></TD>
-</TR>
-<TR>
-<TD BGCOLOR="white"></TD>
-<TD BGCOLOR="black"></TD>
-<TD BGCOLOR="black"></TD>
-<TD BGCOLOR="black"></TD>
-<TD BGCOLOR="black"></TD>
-<TD BGCOLOR="black"></TD>
-<TD BGCOLOR="black"></TD>
-<TD BGCOLOR="purple"></TD>
-<TD BGCOLOR="purple"></TD>
-<TD BGCOLOR="black"></TD>
-<TD BGCOLOR="white"></TD>
-</TR>
-<TR>
-<TD BGCOLOR="white"></TD>
-<TD BGCOLOR="black"></TD>
-<TD BGCOLOR="purple"></TD>
-<TD BGCOLOR="purple"></TD>
-<TD BGCOLOR="purple"></TD>
-<TD BGCOLOR="purple"></TD>
-<TD BGCOLOR="purple"></TD>
-<TD BGCOLOR="purple"></TD>
-<TD BGCOLOR="purple"></TD>
-<TD BGCOLOR="black"></TD>
-<TD BGCOLOR="black"></TD>
-</TR>
-<TR>
-<TD BGCOLOR="black"></TD>
-<TD BGCOLOR="black"></TD>
-<TD BGCOLOR="black"></TD>
-<TD BGCOLOR="black"></TD>
-<TD BGCOLOR="black"></TD>
-<TD BGCOLOR="black"></TD>
-<TD BGCOLOR="purple"></TD>
-<TD BGCOLOR="black"></TD>
-<TD BGCOLOR="purple"></TD>
-<TD BGCOLOR="purple"></TD>
 <TD BGCOLOR="purple"></TD>
 </TR>
 <TR>
-<TD BGCOLOR="white"></TD>
-<TD BGCOLOR="red"></TD>
-<TD BGCOLOR="white"></TD>
 <TD BGCOLOR="black"></TD>
 <TD BGCOLOR="purple"></TD>
 <TD BGCOLOR="purple"></TD>
-<TD BGCOLOR="purple"></TD>
-<TD BGCOLOR="purple"></TD>
-<TD BGCOLOR="purple"></TD>
-<TD BGCOLOR="purple"></TD>
-<TD BGCOLOR="purple"></TD>
+<TD BGCOLOR="black"></TD>
 </TR>
 </TABLE>>]
 }
