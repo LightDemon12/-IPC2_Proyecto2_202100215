@@ -2,8 +2,8 @@ import tkinter as tk
 from tkinter import ttk
 from Logica.seleccion_archivo import seleccionar_archivo
 from Logica.XML_reader import cargar_maquetas_desde_xml
-from Logica.gestion_maquetas import ListaMaquetas, NodoMaqueta, ListaDFS, NodoDFS, dfs, generar_dot_DFS, generar_dot_objetivos_alcanzados, mostrar_imagen, contar_objetivos_visitados
-
+from Logica.gestion_maquetas import ListaMaquetas, NodoMaqueta, ListaDFS, NodoDFS, dfs, generar_dot_DFS, generar_dot_objetivos_alcanzados, mostrar_imagen
+import webbrowser
 
 def iniciar_interfaz(lista_maquetas):
     # Configurar la apariencia de la ventana principal
@@ -64,17 +64,43 @@ def iniciar_interfaz(lista_maquetas):
         generar_dot_objetivos_alcanzados(lista_maquetas, nombre_maqueta, objetivos_visitados, 'objetivos_alcanzados')
         # Mostrar la imagen generada
         mostrar_imagen('objetivos_alcanzados.png')
-        num_objetivos_visitados, total_objetivos = contar_objetivos_visitados(maqueta, objetivos_visitados)
 
 
-        if num_objetivos_visitados == total_objetivos:
-            print(f'Se visitaron todos los {total_objetivos} objetivos.')
-        else:
-            print(f'Solo se visitaron {num_objetivos_visitados} de {total_objetivos} objetivos.')
 
+
+
+
+
+
+    def abrir_link():
+        webbrowser.open('https://github.com/LightDemon12/-IPC2_Proyecto2_202100215')
 
     def boton_ayuda():
         print("boton_ayuda presionado")
+
+        # Crear una nueva ventana
+        ventana_ayuda = tk.Toplevel()
+        ventana_ayuda.geometry("350x100")  # Establecer el tamaño de la ventana
+
+        # Mostrar la información
+        info = tk.Label(ventana_ayuda, text="Estudiante: Angel Guillermo de Jesús Pérez Jiménez\n"
+                                            "Carnet: 202100215\n"
+                                            "Correo: 3870961320101@ingenieria.usac.edu.gt")
+        info.grid(row=0, column=0, columnspan=3, sticky='nsew')
+
+        # Crear los botones
+        boton1 = tk.Button(ventana_ayuda, text="Botón 1", command=abrir_link)
+        boton1.grid(row=1, column=0, sticky='nsew', padx=5, pady=5)
+        boton2 = tk.Button(ventana_ayuda, text="Botón 2")
+        boton2.grid(row=1, column=1, sticky='nsew', padx=5, pady=5)
+        boton3 = tk.Button(ventana_ayuda, text="Botón 3")
+        boton3.grid(row=1, column=2, sticky='nsew', padx=5, pady=5)
+
+        # Configurar las columnas para que se expandan y llenen el espacio disponible
+        ventana_ayuda.grid_columnconfigure(0, weight=1)
+        ventana_ayuda.grid_columnconfigure(1, weight=1)
+        ventana_ayuda.grid_columnconfigure(2, weight=1)
+
 
     def boton_ver_configuracion():
         print("boton_ver_configuracion presionado")

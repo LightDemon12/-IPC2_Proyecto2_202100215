@@ -4,21 +4,21 @@ digraph G {
 <TR>
 <TD BGCOLOR="black"></TD>
 <TD BGCOLOR="white"></TD>
+<TD BGCOLOR="black"></TD>
+<TD BGCOLOR="white"></TD>
+<TD BGCOLOR="black"></TD>
+<TD BGCOLOR="black"></TD>
+<TD BGCOLOR="black"></TD>
+<TD BGCOLOR="black"></TD>
+<TD BGCOLOR="black"></TD>
+<TD BGCOLOR="white"></TD>
+<TD BGCOLOR="black"></TD>
+</TR>
+<TR>
+<TD BGCOLOR="white"></TD>
+<TD BGCOLOR="white"></TD>
+<TD BGCOLOR="white"></TD>
 <TD BGCOLOR="green"></TD>
-<TD BGCOLOR="red"></TD>
-<TD BGCOLOR="black"></TD>
-<TD BGCOLOR="black"></TD>
-<TD BGCOLOR="black"></TD>
-<TD BGCOLOR="black"></TD>
-<TD BGCOLOR="black"></TD>
-<TD BGCOLOR="white"></TD>
-<TD BGCOLOR="black"></TD>
-</TR>
-<TR>
-<TD BGCOLOR="white"></TD>
-<TD BGCOLOR="white"></TD>
-<TD BGCOLOR="white"></TD>
-<TD BGCOLOR="white"></TD>
 <TD BGCOLOR="white"></TD>
 <TD BGCOLOR="white"></TD>
 <TD BGCOLOR="white"></TD>
@@ -34,7 +34,7 @@ digraph G {
 <TD BGCOLOR="black"></TD>
 <TD BGCOLOR="black"></TD>
 <TD BGCOLOR="white"></TD>
-<TD BGCOLOR="red"></TD>
+<TD BGCOLOR="blue"></TD>
 <TD BGCOLOR="black"></TD>
 <TD BGCOLOR="black"></TD>
 <TD BGCOLOR="white"></TD>
@@ -49,7 +49,7 @@ digraph G {
 <TD BGCOLOR="black"></TD>
 <TD BGCOLOR="black"></TD>
 <TD BGCOLOR="black"></TD>
-<TD BGCOLOR="red"></TD>
+<TD BGCOLOR="blue"></TD>
 <TD BGCOLOR="white"></TD>
 <TD BGCOLOR="black"></TD>
 </TR>

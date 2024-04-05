@@ -465,16 +465,3 @@ def mostrar_imagen(ruta_imagen):
     etiqueta_imagen.imagen = imagen_tk
     return ventana
 
-def contar_objetivos_visitados(objetivos, visitados):
-    total_objetivos = 0
-    objetivos_visitados = 0
-    objetivo_actual = objetivos
-
-    while objetivo_actual is not None:
-        if hasattr(objetivo_actual, 'fila') and hasattr(objetivo_actual, 'columna'):
-            total_objetivos += 1
-            if visitados.obtener_celda(objetivo_actual.fila, objetivo_actual.columna) is not None:
-                objetivos_visitados += 1
-        objetivo_actual = objetivo_actual.siguiente
-
-    return objetivos_visitados, total_objetivos
